@@ -87,6 +87,7 @@ def terminate():
     pygame.quit()
     sys.exit()
 
+
 def start_screen():
     intro_text = ["Space shooter", "",
                   "Нажмите 1 для выбора лёгкого уровня сложности.",
@@ -121,10 +122,11 @@ def start_screen():
         pygame.display.flip()
         clock.tick(FPS)
 
+
 def game_over():
     intro_text = ["Вы проиграли!", "",
                   f"Ваш счёт: {ship.score}", ""
-                  "Нажмите ПРОБЕЛ чтобы начать заново."]
+                                             "Нажмите ПРОБЕЛ чтобы начать заново."]
 
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
     screen.blit(fon, (0, 0))
@@ -149,6 +151,7 @@ def game_over():
                     start_screen()
         pygame.display.flip()
         clock.tick(FPS)
+
 
 def main(speed, reload, freq, hp):
     clock = pygame.time.Clock()
