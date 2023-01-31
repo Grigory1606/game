@@ -41,6 +41,7 @@ class Ship(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = pos
         self.hp = hp
+        self.score = 0
 
 
 class Shot(pygame.sprite.Sprite):
@@ -76,6 +77,7 @@ class Asteroid(pygame.sprite.Sprite):
             ship.hp -= 1
             self.kill()
         elif pygame.sprite.spritecollideany(self, shots):
+            ship.score += 50
             self.kill()
         else:
             self.rect = self.rect.move(0, self.speed)
@@ -121,7 +123,8 @@ def start_screen():
 
 def game_over():
     intro_text = ["Вы проиграли!", "",
-                  "Нажмите 0 чтобы начать заново."]
+                  f"Ваш счёт: {ship.score}", ""
+                  "Нажмите ПРОБЕЛ чтобы начать заново."]
 
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
     screen.blit(fon, (0, 0))
@@ -142,16 +145,19 @@ def game_over():
             if event.type == pygame.QUIT:
                 terminate()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_0:
+                if event.key == pygame.K_SPACE:
                     start_screen()
         pygame.display.flip()
         clock.tick(FPS)
 
 def main(speed, reload, freq, hp):
     clock = pygame.time.Clock()
-    running = True
     global ship
     ship = Ship((width // 2, height // 1.1), hp)
+    font = pygame.font.Font(None, 30)
+    string_rendered = font.render(f'Score: {ship.score}   HP: {ship.hp}', 1, pygame.Color('white'))
+    intro_rect = string_rendered.get_rect()
+    running = True
     pygame.key.set_repeat(True)
     s = 0
     while running:
@@ -168,6 +174,9 @@ def main(speed, reload, freq, hp):
                     if ship.rect.right < width:
                         ship.rect.right += 1
         screen.fill(pygame.Color('#0f0f2f'))
+        screen.blit(font.render(f'Score: {ship.score}   HP: {ship.hp}', 1, pygame.Color('white')), intro_rect)
+        if s % (FPS * 10) == 0:
+            ship.score += 100
         if s % (FPS * freq) == 0:
             Asteroid((random.randint(0, width), 0), speed)
         if s % (FPS * reload) == 0:
